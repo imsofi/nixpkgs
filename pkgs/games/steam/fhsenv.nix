@@ -81,6 +81,7 @@ in buildFHSEnv rec {
     libGL
     libva
     pipewire.lib
+    (lib.getLib networkmanager) # for libnm.so
 
     # steamwebhelper
     harfbuzz
