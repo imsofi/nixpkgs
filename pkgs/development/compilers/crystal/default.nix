@@ -314,5 +314,12 @@ rec {
     llvmPackages = llvmPackages_15;
   };
 
+  crystal_1_10 = generic {
+    version = "1.10.1";
+    sha256 = "sha256-+ytVFf0t6ZDcJ+bQaDC012/YlOTpo7G6WGBMGlRltt4=";
+    binary = binaryCrystal_1_2;
+    llvmPackages = llvmPackages_15;
+  };
+
   crystal = crystal_1_9;
 }

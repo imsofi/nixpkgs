@@ -15687,6 +15687,7 @@ with pkgs;
     crystal_1_7
     crystal_1_8
     crystal_1_9
+    crystal_1_10
     crystal;
 
   crystal2nix = callPackage ../development/compilers/crystal2nix { };
