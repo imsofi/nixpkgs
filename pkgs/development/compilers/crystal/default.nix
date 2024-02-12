@@ -152,7 +152,10 @@ let
         # Darwin links against libc++ not libstdc++. Newer versions of clang (12+) require
         # libc++abi to be linked explicitly (see https://github.com/NixOS/nixpkgs/issues/166205).
         substituteInPlace src/llvm/lib_llvm.cr \
-          --replace '@[Link("stdc++")]' '@[Link("c++", "-l${stdenv.cc.libcxx.cxxabi.libName}")]'
+          --replace '@[Link("stdc++")]' '@[Link("c++", ldflags: "-l${stdenv.cc.libcxx.cxxabi.libName}")]'
+      '' + lib.optionalString (lib.versionAtLeast version "1.10.0") ''
+        substituteInPlace src/regex/lib_pcre2.cr \
+          --replace '@[Link("pcre2-8")]' '@[Link("pcre2-8", ldflags: "-L${pcre2.out}/lib")]'
       '';
 
       # Defaults are 4
@@ -175,7 +178,8 @@ let
         libxml2
         openssl
       ] ++ extraBuildInputs
-      ++ lib.optionals stdenv.isDarwin [ libiconv ];
+      ++ lib.optionals stdenv.isDarwin [ libiconv ]
+      ++ lib.optionals (lib.versionAtLeast version "1.10.0") [ libffi ];
 
       makeFlags = [
         "CRYSTAL_CONFIG_VERSION=${version}"
@@ -189,6 +193,9 @@ let
           if (builtins.match "^([[:digit:]]*)\.([[:digit:]]*)\.([[:digit:]]*)$" version) == null
           then version
           else ""}''
+      ] ++ lib.optionals (lib.versionAtLeast version "1.10.0") [
+        # Flaky tests before 1.10.
+        "interpreter=1"
       ];
 
       LLVM_CONFIG = "${llvmPackages.llvm.dev}/bin/llvm-config";
