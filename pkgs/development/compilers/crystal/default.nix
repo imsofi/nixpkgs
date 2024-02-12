@@ -180,6 +180,15 @@ let
       makeFlags = [
         "CRYSTAL_CONFIG_VERSION=${version}"
         "progress=1"
+      ] ++ [
+        # Flags to to help `--version` (`src/compiler/crystal/config.cr`) be more descriptive.
+        # Our build date is 1980-01-01, which doesn't make sense, override it to nothing to skip including it.
+        "SOURCE_DATE_EPOCH="
+        # Expose build commit from nix version if we are not using semantic versioning.
+        ''CRYSTAL_CONFIG_BUILD_COMMIT=${
+          if (builtins.match "^([[:digit:]]*)\.([[:digit:]]*)\.([[:digit:]]*)$" version) == null
+          then version
+          else ""}''
       ];
 
       LLVM_CONFIG = "${llvmPackages.llvm.dev}/bin/llvm-config";
