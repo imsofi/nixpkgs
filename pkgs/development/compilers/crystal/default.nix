@@ -184,6 +184,8 @@ let
       makeFlags = [
         "CRYSTAL_CONFIG_VERSION=${version}"
         "progress=1"
+        "stats=1"
+        "verbose=1"
       ] ++ [
         # Flags to to help `--version` (`src/compiler/crystal/config.cr`) be more descriptive.
         # Our build date is 1980-01-01, which doesn't make sense, override it to nothing to skip including it.
